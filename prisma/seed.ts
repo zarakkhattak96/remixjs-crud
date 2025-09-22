@@ -44,7 +44,7 @@ async function seed() {
       users.push(user);
       console.log(`✅ Created user ${i + 1}/${numberOfUsers}: ${email}`);
     } catch (error) {
-      console.log(`⚠️  Skipped duplicate email: ${email}`);
+      console.log(`⚠️  Skipped duplicate email: ${email}, ${error}`);
     }
   }
 
