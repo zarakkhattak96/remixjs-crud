@@ -28,10 +28,11 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>NoteFlow - Your Digital Notes</title>
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full bg-gray-50">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
