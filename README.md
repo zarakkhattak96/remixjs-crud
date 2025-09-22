@@ -1,189 +1,157 @@
-> [!NOTE]  
-> This repo has been archived. Please refer instead to:
-> - The official [React Router templates](https://github.com/remix-run/react-router-templates/) for simple templates to get started with
-> - [The Epic Stack](https://github.com/epicweb-dev/epic-stack) for a more comprehensive, batteries-included option
-> - [Remix Discord](https://rmx.as/discord) to ask and share community templates
+# NoteFlow - Digital Notes App
 
-# Remix Indie Stack
+A beautiful, modern note-taking application built with Remix.js, featuring a clean UI and full CRUD operations.
 
-![The Remix Indie Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
+![NoteFlow](https://via.placeholder.com/800x400/4f46e5/ffffff?text=NoteFlow+-+Your+Digital+Notes)
 
-Learn more about [Remix Stacks](https://remix.run/stacks).
+## Features
 
-```sh
-npx create-remix@latest --template remix-run/indie-stack
-```
+- **Modern UI**: Beautiful, responsive design with gradient backgrounds and glass-morphism effects
+- **Full CRUD Operations**: Create, Read, Update, and Delete notes seamlessly
+- **User Authentication**: Secure email/password authentication with cookie-based sessions
+- **Real-time Updates**: Instant UI updates with Remix's built-in reactivity
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **Fake Data Generation**: Built-in seeding with Faker.js for realistic test data
 
-## What's in the stack
+## Tech Stack
 
-- [Fly app deployment](https://fly.io) with [Docker](https://www.docker.com/)
-- Production-ready [SQLite Database](https://sqlite.org)
-- Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
-- [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
-- Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#md-createcookiesessionstorage)
-- Database ORM with [Prisma](https://prisma.io)
-- Styling with [Tailwind](https://tailwindcss.com/)
-- End-to-end testing with [Cypress](https://cypress.io)
-- Local third party request mocking with [MSW](https://mswjs.io)
-- Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
-- Code formatting with [Prettier](https://prettier.io)
-- Linting with [ESLint](https://eslint.org)
-- Static Types with [TypeScript](https://typescriptlang.org)
+- **Frontend**: [Remix.js](https://remix.run/) with React
+- **Database**: [SQLite](https://sqlite.org) with [Prisma ORM](https://prisma.io)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom components
+- **Authentication**: Cookie-based sessions with bcrypt password hashing
+- **Testing**: [Cypress](https://cypress.io) for E2E tests, [Vitest](https://vitest.dev) for unit tests
+- **Code Quality**: [ESLint](https://eslint.org), [Prettier](https://prettier.io), and [TypeScript](https://typescriptlang.org)
+- **Data Generation**: [Faker.js](https://fakerjs.dev/) for realistic test data
 
-Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
+## Getting Started
 
-## Quickstart
+### Prerequisites
 
-Click this button to create a [Gitpod](https://gitpod.io) workspace with the project set up and Fly pre-installed
+- Node.js 18+ 
+- pnpm (recommended) or npm
 
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/remix-run/indie-stack/tree/main)
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd remixjs-crud
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Set up the database:
+   ```bash
+   pnpm run setup
+   ```
+
+4. Start the development server:
+   ```bash
+   pnpm run dev
+   ```
+
+The app will be available at `http://localhost:6999`
+
+### Default Login Credentials
+
+The seed script creates an admin user with test data:
+
+- **Email**: `admin@example.com`
+- **Password**: `password123`
+
+### Database Seeding
+
+The app includes a comprehensive seed script that generates:
+- 1 admin user (admin@example.com)
+- 10 fake users with random emails
+- 5 notes per user (55 total notes)
+- Realistic content using Faker.js
+
+## Available Scripts
+
+- `pnpm run dev` - Start development server on port 6999
+- `pnpm run build` - Build for production
+- `pnpm run start` - Start production server
+- `pnpm run seed` - Seed database with fake data
+- `pnpm run reset-db` - Reset database and reseed
+- `pnpm run test` - Run unit tests with Vitest
+- `pnpm run test:e2e:dev` - Run E2E tests with Cypress
+- `pnpm run lint` - Run ESLint
+- `pnpm run format` - Format code with Prettier
+
+## Project Structure
+
+### Key Files
+
+- **Authentication**: [./app/models/user.server.ts](./app/models/user.server.ts) - User management and login
+- **Sessions**: [./app/session.server.ts](./app/session.server.ts) - Session handling and verification
+- **Notes CRUD**: [./app/models/note.server.ts](./app/models/note.server.ts) - Note operations (Create, Read, Update, Delete)
+- **Database**: [./prisma/schema.prisma](./prisma/schema.prisma) - Database schema
+- **Seeding**: [./prisma/seed.ts](./prisma/seed.ts) - Database seeding with Faker.js
+
+### Routes
+
+- `/` - Landing page with authentication options
+- `/login` - User login
+- `/join` - User registration  
+- `/notes` - Notes dashboard
+- `/notes/new` - Create new note
+- `/notes/:id` - View and edit individual notes
 
 ## Development
 
-- First run this stack's `remix.init` script and commit the changes it makes to your project.
+This app runs on a fixed port `6999` for consistency. The development server includes:
 
-  ```sh
-  npx remix init
-  git init # if you haven't already
-  git add .
-  git commit -m "Initialize project"
-  ```
+- Hot reloading for instant updates
+- Automatic database migrations
+- Built-in error handling
+- Mock server for development
 
-- Initial setup:
+### Database Management
 
-  ```sh
-  npm run setup
-  ```
-
-- Start dev server:
-
-  ```sh
-  npm run dev
-  ```
-
-This starts your app in development mode, rebuilding assets on file changes.
-
-The database seed script creates a new user with some data you can use to get started:
-
-- Email: `rachel@remix.run`
-- Password: `racheliscool`
-
-### Relevant code:
-
-This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Prisma and Remix. The main functionality is creating users, logging in and out, and creating and deleting notes.
-
-- creating users, and logging in and out [./app/models/user.server.ts](./app/models/user.server.ts)
-- user sessions, and verifying them [./app/session.server.ts](./app/session.server.ts)
-- creating, and deleting notes [./app/models/note.server.ts](./app/models/note.server.ts)
-
-## Deployment
-
-This Remix Stack comes with two GitHub Actions that handle automatically deploying your app to production and staging environments.
-
-Prior to your first deployment, you'll need to do a few things:
-
-- [Install Fly](https://fly.io/docs/getting-started/installing-flyctl/)
-
-- Sign up and log in to Fly
-
-  ```sh
-  fly auth signup
-  ```
-
-  > **Note:** If you have more than one Fly account, ensure that you are signed into the same account in the Fly CLI as you are in the browser. In your terminal, run `fly auth whoami` and ensure the email matches the Fly account signed into the browser.
-
-- Create two apps on Fly, one for staging and one for production:
-
-  ```sh
-  fly apps create indie-stack-template
-  fly apps create indie-stack-template-staging
-  ```
-
-  > **Note:** Make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
-
-  - Initialize Git.
-
-  ```sh
-  git init
-  ```
-
-- Create a new [GitHub Repository](https://repo.new), and then add it as the remote for your project. **Do not push your app yet!**
-
-  ```sh
-  git remote add origin <ORIGIN_URL>
-  ```
-
-- Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
-
-- Add a `SESSION_SECRET` to your fly app secrets, to do this you can run the following commands:
-
-  ```sh
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app indie-stack-template
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app indie-stack-template-staging
-  ```
-
-  If you don't have openssl installed, you can also use [1Password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
-
-- Create a persistent volume for the sqlite database for both your staging and production environments. Run the following:
-
-  ```sh
-  fly volumes create data --size 1 --app indie-stack-template
-  fly volumes create data --size 1 --app indie-stack-template-staging
-  ```
-
-Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
-
-### Connecting to your database
-
-The sqlite database lives at `/data/sqlite.db` in your deployed application. You can connect to the live database by running `fly ssh console -C database-cli`.
-
-### Getting Help with Deployment
-
-If you run into any issues deploying to Fly, make sure you've followed all of the steps above and if you have, then post as many details about your deployment (including your app name) to [the Fly support community](https://community.fly.io). They're normally pretty responsive over there and hopefully can help resolve any of your deployment issues and questions.
-
-## GitHub Actions
-
-We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.
+- **Reset Database**: `pnpm run reset-db` - Clears all data and reseeds
+- **Seed Database**: `pnpm run seed` - Adds fake data without clearing existing data
+- **Database Location**: `./prisma/data.db` (SQLite file)
 
 ## Testing
 
-### Cypress
+### Cypress E2E Tests
 
-We use Cypress for our End-to-End tests in this project. You'll find those in the `cypress` directory. As you make changes, add to an existing file or create a new file in the `cypress/e2e` directory to test your changes.
-
-We use [`@testing-library/cypress`](https://testing-library.com/cypress) for selecting elements on the page semantically.
-
-To run these tests in development, run `npm run test:e2e:dev` which will start the dev server for the app as well as the Cypress client. Make sure the database is running in docker as described above.
-
-We have a utility for testing authenticated features without having to go through the login flow:
-
-```ts
-cy.login();
-// you are now logged in as a new user
+Run end-to-end tests with:
+```bash
+pnpm run test:e2e:dev  # Interactive mode
+pnpm run test:e2e:run  # Headless mode
 ```
 
-We also have a utility to auto-delete the user at the end of your test. Just make sure to add this in each test file:
+Tests are located in the `cypress/e2e` directory and use [`@testing-library/cypress`](https://testing-library.com/cypress) for semantic element selection.
 
-```ts
-afterEach(() => {
-  cy.cleanupUser();
-});
+### Vitest Unit Tests
+
+Run unit tests with:
+```bash
+pnpm run test
 ```
 
-That way, we can keep your local db clean and keep your tests isolated from one another.
+Uses [`@testing-library/jest-dom`](https://testing-library.com/jest-dom) for DOM-specific assertions.
 
-### Vitest
+### Code Quality
 
-For lower level tests of utilities and individual components, we use `vitest`. We have DOM-specific assertion helpers via [`@testing-library/jest-dom`](https://testing-library.com/jest-dom).
+- **Type Checking**: `pnpm run typecheck` - TypeScript validation
+- **Linting**: `pnpm run lint` - ESLint code analysis  
+- **Formatting**: `pnpm run format` - Prettier code formatting
 
-### Type Checking
+## Contributing
 
-This project uses TypeScript. It's recommended to get TypeScript set up for your editor to get a really great in-editor experience with type checking and auto-complete. To run type checking across the whole project, run `npm run typecheck`.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes and test them
+4. Commit your changes: `git commit -m 'Add amazing feature'`
+5. Push to the branch: `git push origin feature/amazing-feature`
+6. Open a Pull Request
 
-### Linting
+## License
 
-This project uses ESLint for linting. That is configured in `.eslintrc.cjs`.
-
-### Formatting
-
-We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
