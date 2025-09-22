@@ -2,7 +2,7 @@
 
 A beautiful, modern note-taking application built with Remix.js, featuring a clean UI and full CRUD operations.
 
-![NoteFlow](https://ibb.co/BHY0fhsM)
+![NoteFlow](https://i.ibb.co/CpSRwj0G/image.png)
 
 ## Features
 
