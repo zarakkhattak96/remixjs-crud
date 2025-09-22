@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 
+import RichTextEditor from "~/components/BlockNoteEditor";
 import { deleteNote, getNote, updateNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
 
@@ -67,15 +68,17 @@ export default function NoteDetailsPage() {
   const actionData = useActionData<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isEditing, setIsEditing] = useState(false);
+  const [editorContent, setEditorContent] = useState(data.note.body);
 
   useEffect(() => {
     if (searchParams.get("updated") === "true") {
       setIsEditing(false);
+      setEditorContent(data.note.body);
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.delete("updated");
       setSearchParams(newSearchParams, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, data.note.body]);
 
   return (
     <div className="rounded-lg border bg-white shadow-sm">
@@ -178,12 +181,10 @@ export default function NoteDetailsPage() {
               >
                 Content
               </label>
-              <textarea
-                id="edit-body"
-                name="body"
-                rows={12}
-                defaultValue={data.note.body}
-                className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-lg shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              <input type="hidden" name="body" value={editorContent} />
+              <RichTextEditor
+                initialContent={editorContent}
+                onChange={setEditorContent}
                 placeholder="Write your note content here..."
               />
               {actionData?.errors?.body ? (

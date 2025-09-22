@@ -1,8 +1,9 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import RichTextEditor from "~/components/BlockNoteEditor";
 import { createNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
 
@@ -35,13 +36,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewNotePage() {
   const actionData = useActionData<typeof action>();
   const titleRef = useRef<HTMLInputElement>(null);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const [editorContent, setEditorContent] = useState("");
 
   useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
-    } else if (actionData?.errors?.body) {
-      bodyRef.current?.focus();
     }
   }, [actionData]);
 
@@ -86,17 +85,11 @@ export default function NewNotePage() {
             >
               Content
             </label>
-            <textarea
-              ref={bodyRef}
-              id="body"
-              name="body"
-              rows={12}
-              className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-lg shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+            <input type="hidden" name="body" value={editorContent} />
+            <RichTextEditor
+              initialContent={editorContent}
+              onChange={setEditorContent}
               placeholder="Write your note content here..."
-              aria-invalid={actionData?.errors?.body ? true : undefined}
-              aria-errormessage={
-                actionData?.errors?.body ? "body-error" : undefined
-              }
             />
             {actionData?.errors?.body ? (
               <div className="mt-2 text-sm text-red-600" id="body-error">
