@@ -1,9 +1,16 @@
-import type { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
 
-export type { User } from "@prisma/client";
+type User = {
+  id: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type { User };
 
 export async function getUserById(id: User["id"]) {
   return prisma.user.findUnique({ where: { id } });

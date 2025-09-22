@@ -6,7 +6,9 @@ import {
   useActionData,
   useLoaderData,
   useRouteError,
+  useSearchParams,
 } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 
 import { deleteNote, getNote, updateNote } from "~/models/note.server";
@@ -54,7 +56,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     }
 
     await updateNote({ id: params.noteId, title, body, userId });
-    return redirect(`/notes/${params.noteId}`);
+    return redirect(`/notes/${params.noteId}?updated=true`);
   }
 
   return null;
@@ -63,6 +65,17 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export default function NoteDetailsPage() {
   const data = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("updated") === "true") {
+      setIsEditing(false);
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("updated");
+      setSearchParams(newSearchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   return (
     <div className="rounded-lg border bg-white shadow-sm">
@@ -72,6 +85,28 @@ export default function NoteDetailsPage() {
             {data.note.title}
           </h2>
           <div className="flex space-x-2">
+            {!isEditing && (
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <svg
+                  className="mr-1 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                Edit
+              </button>
+            )}
             <Form method="post" className="inline">
               <input type="hidden" name="intent" value="delete" />
               <button
@@ -104,14 +139,14 @@ export default function NoteDetailsPage() {
       </div>
 
       <div className="p-6">
-        <div className="prose prose-lg max-w-none">
-          <div className="whitespace-pre-wrap leading-relaxed text-gray-700">
-            {data.note.body}
+        {!isEditing ? (
+          <div className="prose prose-lg max-w-none">
+            <div className="whitespace-pre-wrap leading-relaxed text-gray-700">
+              {data.note.body}
+            </div>
           </div>
-        </div>
-
-        <div className="mt-8 border-t border-gray-200 pt-6">
-          <Form method="post" className="space-y-4">
+        ) : (
+          <Form method="post" className="space-y-6">
             <input type="hidden" name="intent" value="update" />
 
             <div>
@@ -119,14 +154,14 @@ export default function NoteDetailsPage() {
                 htmlFor="edit-title"
                 className="mb-2 block text-sm font-medium text-gray-700"
               >
-                Edit Title
+                Title
               </label>
               <input
                 id="edit-title"
                 name="title"
                 type="text"
                 defaultValue={data.note.title}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-lg shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                 placeholder="Enter note title..."
               />
               {actionData?.errors?.title ? (
@@ -141,14 +176,14 @@ export default function NoteDetailsPage() {
                 htmlFor="edit-body"
                 className="mb-2 block text-sm font-medium text-gray-700"
               >
-                Edit Content
+                Content
               </label>
               <textarea
                 id="edit-body"
                 name="body"
-                rows={8}
+                rows={12}
                 defaultValue={data.note.body}
-                className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-lg shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                 placeholder="Write your note content here..."
               />
               {actionData?.errors?.body ? (
@@ -161,7 +196,7 @@ export default function NoteDetailsPage() {
             <div className="flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={() => window.location.reload()}
+                onClick={() => setIsEditing(false)}
                 className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Cancel
@@ -180,14 +215,14 @@ export default function NoteDetailsPage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    d="M5 13l4 4L19 7"
                   />
                 </svg>
-                Update Note
+                Save Changes
               </button>
             </div>
           </Form>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,14 @@
-import type { User, Note } from "@prisma/client";
-
 import { prisma } from "~/db.server";
+import type { User } from "./user.server";
+
+type Note = {
+  id: string;
+  title: string;
+  body: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export function getNote({
   id,
@@ -50,7 +58,7 @@ export function updateNote({
 }: Pick<Note, "body" | "title"> & {
   userId: User["id"];
 } & { id: string }) {
-  return prisma.note.updateMany({
+  return prisma.note.update({
     where: { id, userId },
     data: { title, body },
   });
@@ -60,7 +68,7 @@ export function deleteNote({
   id,
   userId,
 }: Pick<Note, "id"> & { userId: User["id"] }) {
-  return prisma.note.deleteMany({
+  return prisma.note.delete({
     where: { id, userId },
   });
 }
