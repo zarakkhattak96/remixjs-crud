@@ -1,0 +1,44 @@
+name: Fly Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build app
+        run: pnpm run build
+
+      - name: Install Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      - name: Deploy to Fly (skips when token missing)
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "${FLY_API_TOKEN}" ]; then
+            echo "No FLY_API_TOKEN secret; skipping deploy but exiting successfully.";
+            exit 0;
+          fi
+          # If token exists, attempt deploy. Requires prior fly launch/setup in repo.
+          # --detach returns quickly; --remote-only uses remote builder to avoid local Docker.
+          flyctl deploy --detach --remote-only
+
+
