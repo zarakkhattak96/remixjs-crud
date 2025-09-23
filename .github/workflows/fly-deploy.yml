@@ -28,6 +28,25 @@ jobs:
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
 
+      - name: Verify Fly app exists (skips when missing)
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "${FLY_API_TOKEN}" ]; then
+            echo "No FLY_API_TOKEN secret; skipping deploy but exiting successfully.";
+            exit 0;
+          fi
+          APP_NAME=$(awk -F ' *= *' '/^app =/{gsub(/"/,"",$2);print $2}' fly.toml)
+          if [ -z "$APP_NAME" ]; then
+            echo "No app name found in fly.toml; skipping deploy.";
+            exit 0;
+          fi
+          if ! flyctl apps show -a "$APP_NAME" >/dev/null 2>&1; then
+            echo "Fly app '$APP_NAME' not found. Skipping deploy (create it with: fly apps create $APP_NAME).";
+            exit 0;
+          fi
+          echo "FLY_APP_NAME=$APP_NAME" >> $GITHUB_ENV
+
       - name: Deploy to Fly (skips when token missing)
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -38,6 +57,6 @@ jobs:
           fi
           # If token exists, attempt deploy. Requires prior fly launch/setup in repo.
           # --detach returns quickly; --remote-only uses remote builder to avoid local Docker.
-          flyctl deploy --detach --remote-only
+          flyctl deploy --detach --remote-only -a "$FLY_APP_NAME"
 
 
