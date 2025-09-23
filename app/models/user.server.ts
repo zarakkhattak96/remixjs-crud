@@ -2,13 +2,13 @@ import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
 
-type User = {
+interface User {
   id: string;
   email: string;
   password: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 export type { User };
 
