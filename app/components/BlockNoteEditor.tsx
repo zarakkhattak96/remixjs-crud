@@ -1,4 +1,4 @@
-import React from "react";
+// React import removed as it's unused and JSX runtime handles it
 
 interface RichTextEditorProps {
   initialContent?: string;

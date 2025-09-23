@@ -1,14 +1,15 @@
 import { prisma } from "~/db.server";
+
 import type { User } from "./user.server";
 
-type Note = {
+interface Note {
   id: string;
   title: string;
   body: string;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 export function getNote({
   id,
