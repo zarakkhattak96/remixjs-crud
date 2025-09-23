@@ -102,7 +102,6 @@ export default function LoginPage() {
                 ref={emailRef}
                 id="email"
                 required
-                autoFocus={false}
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -170,7 +169,7 @@ export default function LoginPage() {
             </div>
 
             <div className="text-center text-sm text-gray-300">
-              Don\'t have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 className="font-semibold text-white transition-colors duration-200 hover:text-gray-200"
                 to={{

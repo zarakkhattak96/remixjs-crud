@@ -11,7 +11,7 @@ async function seed() {
   const adminEmail = "admin@example.com";
   await prisma.user
     .delete({ where: { email: adminEmail } })
-    .catch((err: any) => {
+    .catch((err: Error) => {
       console.log(`⚠️  Skipped admin user deletion: ${adminEmail} ${err}`);
     });
 

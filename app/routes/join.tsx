@@ -107,7 +107,6 @@ export default function Join() {
                 ref={emailRef}
                 id="email"
                 required
-                autoFocus={false}
                 name="email"
                 type="email"
                 autoComplete="email"
