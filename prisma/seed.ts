@@ -9,7 +9,11 @@ async function seed() {
 
   // Create a default admin user
   const adminEmail = "admin@example.com";
-  await prisma.user.delete({ where: { email: adminEmail } }).catch(() => {});
+  await prisma.user
+    .delete({ where: { email: adminEmail } })
+    .catch((err: any) => {
+      console.log(`⚠️  Skipped admin user deletion: ${adminEmail} ${err}`);
+    });
 
   const hashedPassword = await bcrypt.hash("password123", 10);
 
